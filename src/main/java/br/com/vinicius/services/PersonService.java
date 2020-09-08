@@ -1,59 +1,52 @@
 package br.com.vinicius.services;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
+import br.com.vinicius.converter.DozerConverter;
+import br.com.vinicius.data.vo.PersonVO;
 import br.com.vinicius.model.Person;
+import br.com.vinicius.repository.PersonRepository;
 
 @Service
 public class PersonService {
-	private final AtomicLong counter = new AtomicLong();
 	
-	public Person findById(String id) {
-		Person person = new Person();
-		person.setId(counter.incrementAndGet());
-		person.setFirsName("Vinicius");
-		person.setLastName("Michel Schunke");
-		person.setAddress("Candelária, Rio Grande do Sul, Brasil");
-		person.setGender("Male");
-		return person;
+	@Autowired
+	PersonRepository repository;
+	
+	public PersonVO findById(Long id) {
+		Person entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
+		return DozerConverter.parseObject(repository.save(entity), PersonVO.class);
 	}
 	
-	public List<Person> findAll(){
-		List<Person> persons = new ArrayList<Person>();
-		for (int i = 0; i < 8; i++) {
-			Person person = mockPerson(i);
-			persons.add(person);
-		}
+	public List<PersonVO> findAll(){
+		return DozerConverter.parseListObject(repository.findAll(), PersonVO.class);
+	}
+	
+	public PersonVO create(PersonVO person) {
+		Person entity = DozerConverter.parseObject(person, Person.class);
+		PersonVO vo = DozerConverter.parseObject(repository.save(entity), PersonVO.class);
+		return vo;
+	}
+	
+	public PersonVO update(PersonVO person) {
+		Person entity = repository.findById(person.getId()).orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
 		
-		return persons;
+		entity.setFirsName(person.getFirsName());
+		entity.setLastName(person.getLastName());
+		entity.setAddress(person.getAddress());
+		entity.setGender(person.getGender());
+		
+		PersonVO vo = DozerConverter.parseObject(repository.save(entity), PersonVO.class);
+		return vo;
 	}
 	
-	public Person create(Person person) {
-		//Salva no Bd e retorna
-		return person;
+	public void delete(Long id) {
+		Person entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
+		
+		repository.delete(entity);
 	}
 	
-	public Person update(Person person) {
-		//update no Bd e retorna
-		return person;
-	}
-	
-	public void delete(String id) {
-		//Deletaria o recurso no bd
-	}
-	
-
-	private Person mockPerson(int i) {
-		Person person = new Person();
-		person.setId(counter.incrementAndGet());
-		person.setFirsName("Vinicius");
-		person.setLastName("Michel Schunke");
-		person.setAddress("Candelária, Rio Grande do Sul, Brasil");
-		person.setGender("Male");
-		return person;
-	}
 }
