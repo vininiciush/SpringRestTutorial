@@ -7,8 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import br.com.vinicius.converter.mocks.MockPerson;
+import br.com.vinicius.data.vo.v1.PersonVO;
 import br.com.vinicius.model.Person;
-import br.com.vinicius.data.vo.PersonVO;
 
 public class DozerConverterTest {
 	

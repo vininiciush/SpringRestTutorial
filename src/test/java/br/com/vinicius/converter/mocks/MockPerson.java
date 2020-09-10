@@ -3,7 +3,7 @@ package br.com.vinicius.converter.mocks;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.vinicius.data.vo.PersonVO;
+import br.com.vinicius.data.vo.v1.PersonVO;
 import br.com.vinicius.model.Person;
 
 public class MockPerson {

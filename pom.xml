@@ -11,6 +11,10 @@
   <version>0.1</version>
   <packaging>jar</packaging>
   
+  <properties>
+  	<maven.test.skip>true</maven.test.skip>
+  </properties>
+  
   <dependencies>
   	<dependency>
   		<groupId>org.springframework.boot</groupId>
@@ -49,6 +53,11 @@
 	    <artifactId>dozer-core</artifactId>
 	    <version>6.5.0</version>
 	</dependency>
+	
+	<dependency>
+		<groupId>org.flywaydb</groupId>
+		<artifactId>flyway-core</artifactId>
+	</dependency>
   	
   </dependencies>
   
@@ -58,6 +67,28 @@
   			<groupId>org.springframework.boot</groupId>
   			<artifactId>spring-boot-maven-plugin</artifactId>
   		</plugin>
+  		<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
+				<configuration>
+					<url>jdbc:mysql://localhost:3306/SpringTutorial?useTimezone=true&amp;serverTimezone=UTC&amp;useSSL=false</url>
+					<user>admin</user>
+					<password>admin</password>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+						<version>${mysql.version}</version>
+						<exclusions>
+							<exclusion>
+								<artifactId>slf4j-api</artifactId>
+								<groupId>org.slf4j</groupId>
+							</exclusion>
+						</exclusions>
+					</dependency>
+				</dependencies>
+			</plugin>
   	</plugins>
   </build>
   

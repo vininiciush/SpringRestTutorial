@@ -6,7 +6,7 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import br.com.vinicius.converter.DozerConverter;
-import br.com.vinicius.data.vo.PersonVO;
+import br.com.vinicius.data.vo.v1.PersonVO;
 import br.com.vinicius.model.Person;
 import br.com.vinicius.repository.PersonRepository;
 
