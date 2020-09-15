@@ -16,55 +16,55 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.vinicius.data.vo.v1.PersonVO;
-import br.com.vinicius.services.PersonService;
+import br.com.vinicius.data.vo.v1.BookVO;
+import br.com.vinicius.services.BookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = "/person/v1")
-@Api(tags = "Person End-Point")
-public class PersonController {
+@RequestMapping(value = "/book/v1")
+@Api(tags = "Book End-Point")
+public class BookController {
 	
 	@Autowired
-	private PersonService services;
+	private BookService services;
 	
-	@ApiOperation(value = "find all people recorded")
+	@ApiOperation(value = "find all books recorded")
 	@GetMapping(produces = {"application/json", "application/xml", "application/x-yaml"})
-	public List<PersonVO> findAll() throws Exception {
-		List<PersonVO> voList = services.findAll();
-		for(PersonVO personVO : voList) {
-			personVO.add(linkTo(methodOn(PersonController.class).findById(personVO.getId())).withSelfRel());
+	public List<BookVO> findAll() throws Exception {
+		List<BookVO> voList = services.findAll();
+		for(BookVO bookVO : voList) {
+			bookVO.add(linkTo(methodOn(BookController.class).findById(bookVO.getId())).withSelfRel());
 		}
 		
 		return voList;
 	}
 	
-	@ApiOperation(value = "find a person by id")
+	@ApiOperation(value = "find a book by id")
 	@GetMapping(value = "/{id}", produces = {"application/json", "application/xml", "application/x-yaml"})
-	public PersonVO findById(@PathVariable("id") Long id) throws Exception {
-		PersonVO personVO =  services.findById(id);
-		personVO.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
-		return personVO;
+	public BookVO findById(@PathVariable("id") Long id) throws Exception {
+		BookVO bookVO =  services.findById(id);
+		bookVO.add(linkTo(methodOn(BookController.class).findById(id)).withSelfRel());
+		return bookVO;
 	}
 	
-	@ApiOperation(value = "create a new person")
+	@ApiOperation(value = "create a new book")
 	@PostMapping(produces = {"application/json", "application/xml", "application/x-yaml"}, consumes = {"application/json", "application/xml", "application/x-yaml"})
-	public PersonVO create(@RequestBody PersonVO person) throws Exception {
-		PersonVO personVO = services.create(person);
-		personVO.add(linkTo(methodOn(PersonController.class).findById(personVO.getId())).withSelfRel());
-		return personVO;
+	public BookVO create(@RequestBody BookVO book) throws Exception {
+		BookVO bookVO = services.create(book);
+		bookVO.add(linkTo(methodOn(BookController.class).findById(bookVO.getId())).withSelfRel());
+		return bookVO;
 	}
 	
-	@ApiOperation(value = "update person by id")
+	@ApiOperation(value = "update book by id")
 	@PutMapping(produces = {"application/json", "application/xml", "application/x-yaml"}, consumes = {"application/json", "application/xml", "application/x-yaml"})
-	public PersonVO update(@RequestBody PersonVO person) throws Exception {
-		PersonVO personVO = services.update(person);
-		personVO.add(linkTo(methodOn(PersonController.class).findById(personVO.getId())).withSelfRel());
-		return personVO;
+	public BookVO update(@RequestBody BookVO book) throws Exception {
+		BookVO bookVO = services.update(book);
+		bookVO.add(linkTo(methodOn(BookController.class).findById(bookVO.getId())).withSelfRel());
+		return bookVO;
 	}
 	
-	@ApiOperation(value = "delete person by id")
+	@ApiOperation(value = "delete book by id")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") Long id) throws Exception {
 		services.delete(id);
