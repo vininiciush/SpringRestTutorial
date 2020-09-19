@@ -23,7 +23,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = "/person/v1")
+@RequestMapping(value = "/api/person/v1")
 @Api(tags = "Person End-Point")
 //@CrossOrigin(origins = "http://localhost:8080")
 public class PersonController {

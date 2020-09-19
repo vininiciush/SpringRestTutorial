@@ -22,7 +22,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = "/book/v1")
+@RequestMapping(value = "/api/book/v1")
 @Api(tags = "Book End-Point")
 public class BookController {
 	
