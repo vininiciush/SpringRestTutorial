@@ -13,6 +13,7 @@ public class PersonVO extends RepresentationModel implements Serializable{
 	private String lastName;
 	private String address;
 	private String gender;
+	private Boolean enabled;
 
 	public PersonVO() {
 	}
@@ -57,6 +58,14 @@ public class PersonVO extends RepresentationModel implements Serializable{
 		this.gender = gender;
 	}
 
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+	}
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
@@ -64,8 +73,9 @@ public class PersonVO extends RepresentationModel implements Serializable{
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((address == null) ? 0 : address.hashCode());
+		result = prime * result + ((enabled == null) ? 0 : enabled.hashCode());
 		result = prime * result + ((firsName == null) ? 0 : firsName.hashCode());
 		result = prime * result + ((gender == null) ? 0 : gender.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
@@ -77,7 +87,7 @@ public class PersonVO extends RepresentationModel implements Serializable{
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
@@ -86,6 +96,11 @@ public class PersonVO extends RepresentationModel implements Serializable{
 			if (other.address != null)
 				return false;
 		} else if (!address.equals(other.address))
+			return false;
+		if (enabled == null) {
+			if (other.enabled != null)
+				return false;
+		} else if (!enabled.equals(other.enabled))
 			return false;
 		if (firsName == null) {
 			if (other.firsName != null)
@@ -106,7 +121,5 @@ public class PersonVO extends RepresentationModel implements Serializable{
 			return false;
 		return true;
 	}
-	
-	
 	
 }

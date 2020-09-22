@@ -30,6 +30,9 @@ public class Person implements Serializable{
 	
 	@Column(nullable = false, length = 6)
 	private String gender;
+	
+	@Column(name = "enabled", nullable = false)
+	private Boolean enabled;
 
 	public Person() {
 	}
@@ -74,6 +77,14 @@ public class Person implements Serializable{
 		this.gender = gender;
 	}
 
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+	}
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
@@ -83,6 +94,7 @@ public class Person implements Serializable{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((address == null) ? 0 : address.hashCode());
+		result = prime * result + ((enabled == null) ? 0 : enabled.hashCode());
 		result = prime * result + ((firsName == null) ? 0 : firsName.hashCode());
 		result = prime * result + ((gender == null) ? 0 : gender.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
@@ -104,6 +116,11 @@ public class Person implements Serializable{
 				return false;
 		} else if (!address.equals(other.address))
 			return false;
+		if (enabled == null) {
+			if (other.enabled != null)
+				return false;
+		} else if (!enabled.equals(other.enabled))
+			return false;
 		if (firsName == null) {
 			if (other.firsName != null)
 				return false;
@@ -123,7 +140,6 @@ public class Person implements Serializable{
 			return false;
 		return true;
 	}
-
 	
 	
 }

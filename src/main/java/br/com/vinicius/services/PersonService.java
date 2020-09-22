@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.vinicius.converter.DozerConverter;
 import br.com.vinicius.data.vo.v1.PersonVO;
@@ -41,6 +42,13 @@ public class PersonService {
 		
 		PersonVO vo = DozerConverter.parseObject(repository.save(entity), PersonVO.class);
 		return vo;
+	}
+	
+	@Transactional
+	public PersonVO disablePerson(Long id) {
+		repository.disablePerson(id);
+		Person entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
+		return DozerConverter.parseObject(repository.save(entity), PersonVO.class);
 	}
 	
 	public void delete(Long id) {
