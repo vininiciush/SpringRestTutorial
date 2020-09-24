@@ -6,8 +6,14 @@ import static org.springframework.hateoas.server.mvc.ControllerLinkBuilder.metho
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -16,7 +22,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.hateoas.*;
 
 import br.com.vinicius.data.vo.v1.PersonVO;
 import br.com.vinicius.services.PersonService;
@@ -32,15 +40,59 @@ public class PersonController {
 	@Autowired
 	private PersonService services;
 	
+	@Autowired
+	private PagedResourcesAssembler<PersonVO> assembler;
+	
+//	@ApiOperation(value = "find all people recorded")
+//	@GetMapping(produces = {"application/json", "application/xml", "application/x-yaml"})
+//	public List<PersonVO> findAll() throws Exception {
+//		List<PersonVO> voList = services.findAll();
+//		for(PersonVO personVO : voList) {
+//			personVO.add(linkTo(methodOn(PersonController.class).findById(personVO.getId())).withSelfRel());
+//		}
+//		
+//		return voList;
+//	}
+	
 	@ApiOperation(value = "find all people recorded")
 	@GetMapping(produces = {"application/json", "application/xml", "application/x-yaml"})
-	public List<PersonVO> findAll() throws Exception {
-		List<PersonVO> voList = services.findAll();
+	public ResponseEntity<?> findAllPageble(@RequestParam(value="page",defaultValue = "0") Integer page, 
+										 @RequestParam(value = "limit", defaultValue = "12") Integer limit,
+										 @RequestParam(value = "direction", defaultValue = "asc") String direction
+										 ) throws Exception {
+		
+		Direction sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC: Direction.ASC;
+		
+		Pageable pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "firsName"));
+		Page<PersonVO> voList = services.findAll(pageable);
 		for(PersonVO personVO : voList) {
 			personVO.add(linkTo(methodOn(PersonController.class).findById(personVO.getId())).withSelfRel());
 		}
 		
-		return voList;
+		PagedModel<?> model = assembler.toModel(voList);
+		
+		return new ResponseEntity<>(model,HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "find person by name")
+	@GetMapping(value = "/findPersonByName/{firstName}", produces = {"application/json", "application/xml", "application/x-yaml"})
+	public ResponseEntity<?> findPersonByName(
+										 @PathVariable(value = "firstName") String firstName,
+										 @RequestParam(value="page",defaultValue = "0") Integer page, 
+										 @RequestParam(value = "limit", defaultValue = "12") Integer limit,
+										 @RequestParam(value = "direction", defaultValue = "asc") String direction) throws Exception {
+		
+		Direction sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC: Direction.ASC;
+		
+		Pageable pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "firsName"));
+		Page<PersonVO> voList = services.findPersonByName(firstName, pageable);
+		for(PersonVO personVO : voList) {
+			personVO.add(linkTo(methodOn(PersonController.class).findById(personVO.getId())).withSelfRel());
+		}
+		
+		PagedModel<?> model = assembler.toModel(voList);
+		
+		return new ResponseEntity<>(model,HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "find a person by id")

@@ -1,7 +1,10 @@
 package br.com.vinicius.services;
 
-import java.util.List;
+import java.util.function.Function;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,9 +25,32 @@ public class PersonService {
 		return DozerConverter.parseObject(repository.save(entity), PersonVO.class);
 	}
 	
-	public List<PersonVO> findAll(){
-		return DozerConverter.parseListObject(repository.findAll(), PersonVO.class);
+	public Page<PersonVO> findAll(Pageable pageable){
+		Page<Person> page = repository.findAll(pageable);
+		
+		
+		return page.map(new Function<Person, PersonVO>() {
+			@Override
+			public PersonVO apply(Person t) {
+				return DozerConverter.parseObject(t, PersonVO.class);
+			}
+		
+		});
 	}
+	
+	public Page<PersonVO> findPersonByName(String firstName, Pageable pageable){
+		Page<Person> page = repository.findPersonByName(firstName, pageable);
+		
+		
+		return page.map(new Function<Person, PersonVO>() {
+			@Override
+			public PersonVO apply(Person t) {
+				return DozerConverter.parseObject(t, PersonVO.class);
+			}
+		
+		});
+	}
+	
 	
 	public PersonVO create(PersonVO person) {
 		Person entity = DozerConverter.parseObject(person, Person.class);
